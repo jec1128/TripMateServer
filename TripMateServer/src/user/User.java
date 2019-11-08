@@ -8,25 +8,18 @@ public class User {
 	private String userNickname;
 	private int userAge;
 	private int userGender;
-	/*private String userInterest1;
-	private String userInterest2;
-	private String userInterest3;*/
 	private String userEmail;
 	public User() {
 		
 	}
 	
 	
-	public User(String userID, String userPassword, String userNickname, int userAge, int userGender,
-			/*String userInterest1, String userInterest2, String userInterest3,*/ String userEmail) {
+	public User(String userID, String userPassword, String userNickname, int userAge, int userGender, String userEmail) {
 		this.userID = userID;
 		this.userPassword = userPassword;
 		this.userNickname = userNickname;
 		this.userAge = userAge;
 		this.userGender = userGender;
-		/*this.userInterest1 = userInterest1;
-		this.userInterest2 = userInterest2;
-		this.userInterest3 = userInterest3;*/
 		this.userEmail = userEmail;
 	}
 	
@@ -71,24 +64,6 @@ public class User {
 	public void setUserAge(int userAge) {
 		this.userAge = userAge;
 	}
-	/*public String getUserInterest1() {
-		return userInterest1;
-	}
-	public void setUserInterest1(String userInterest1) {
-		this.userInterest1 = userInterest1;
-	}
-	public String getUserInterest2() {
-		return userInterest2;
-	}
-	public void setUserInterest2(String userInterest2) {
-		this.userInterest2 = userInterest2;
-	}
-	public String getUserInterest3() {
-		return userInterest3;
-	}
-	public void setUserInterest3(String userInterest3) {
-		this.userInterest3 = userInterest3;
-	}*/
 
 
 	public String getUserEmail() {

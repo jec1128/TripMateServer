@@ -10,11 +10,31 @@ public class Board {
 	private int gender;
 	private int minage;
 	private int maxage;
-	private Date matchingDate;
+	private String matchingstartDatetime;
+	private String matchingendDatetime;
 	private String thema1;
 	private String thema2;
 	private String thema3;
-	private Date writingDate;
+	private String noticeDatetime;
+	
+	
+	public Board(String userCode, String destination, String content, int gender, int minage, int maxage,
+			String matchingstartDatetime, String matchingendDatetime, String thema1, String thema2, String thema3) {
+		this.userCode = userCode;
+		this.destination = destination;
+		this.content = content;
+		this.gender = gender;
+		this.minage = minage;
+		this.maxage = maxage;
+		this.matchingstartDatetime = matchingstartDatetime;
+		this.matchingendDatetime = matchingendDatetime;
+		this.thema1 = thema1;
+		this.thema2 = thema2;
+		this.thema3 = thema3;
+	}
+	public Board() {
+		// TODO Auto-generated constructor stub
+	}
 	public String getBoardCode() {
 		return boardCode;
 	}
@@ -57,11 +77,18 @@ public class Board {
 	public void setMaxage(int maxage) {
 		this.maxage = maxage;
 	}
-	public Date getMatchingDate() {
-		return matchingDate;
+	
+	public String getMatchingstartDatetime() {
+		return matchingstartDatetime;
 	}
-	public void setMatchingDate(Date matchingDate) {
-		this.matchingDate = matchingDate;
+	public void setMatchingstartDatetime(String matchingstartDatetime) {
+		this.matchingstartDatetime = matchingstartDatetime;
+	}
+	public String getMatchingendDatetime() {
+		return matchingendDatetime;
+	}
+	public void setMatchingendDatetime(String matchingendDatetime) {
+		this.matchingendDatetime = matchingendDatetime;
 	}
 	public String getThema1() {
 		return thema1;
@@ -81,12 +108,13 @@ public class Board {
 	public void setThema3(String thema3) {
 		this.thema3 = thema3;
 	}
-	public Date getWritingDate() {
-		return writingDate;
+	public String getNoticeDatetime() {
+		return noticeDatetime;
 	}
-	public void setWritingDate(Date writingDate) {
-		this.writingDate = writingDate;
+	public void setNoticeDatetime(String noticeDatetime) {
+		this.noticeDatetime = noticeDatetime;
 	}
+	
 	
 	
 }

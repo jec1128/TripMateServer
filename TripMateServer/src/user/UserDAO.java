@@ -7,6 +7,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
+import board.Board;
+
 public class UserDAO {
 	private Connection conn;
 	private PreparedStatement pstmt;
@@ -25,18 +27,18 @@ public class UserDAO {
 	}
 
 	public int getNext() {
-		//String SQL = "SELECT COUNT(*) as cnt FROM user";
-		String SQL = "SELECT user_code FROM user ORDER BY user_code DESC Limit 1"; // 가장 밑에 있는 숫자 가져오기
+		String SQL = "SELECT COUNT(*) as cnt FROM user";
+		
 		try {
 			PreparedStatement pstmt = conn.prepareStatement(SQL);
 			rs = pstmt.executeQuery();
 			if (rs.next()) {
-				String code = rs.getString(1);
-				String number1 = code.substring(5);  // USER- 5개 생략 하고 숫자만
-				int number = Integer.parseInt(number1);
-				return number + 1;
+				int size = rs.getInt(1);
+				return size + 1;
 			}
-			return -1;
+			else 
+				return 1;
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -73,7 +75,7 @@ public class UserDAO {
 				return "error" ;
 			}
 			pstmt = conn.prepareStatement(SQL);
-			pstmt.setString(1, makeCode());
+			pstmt.setString(1, code);
 			pstmt.setString(2, user.getUserID());
 			pstmt.setString(3, user.getUserPassword());
 			pstmt.setString(4, user.getUserNickname());
@@ -163,7 +165,7 @@ public class UserDAO {
 		return "error";
 	}
 
-	public String nicknameSearch(String id) {
+	public String idToNicknameSearch(String id) {
 		String SQL = "SELECT user_nick From user WHERE user_id = ?";
 		try {
 			pstmt = conn.prepareStatement(SQL);
@@ -178,6 +180,59 @@ public class UserDAO {
 			e.printStackTrace();
 		}
 		return "error";
+	}
+	
+	public String codeSearch(String nickname) {
+		String SQL = "SELECT user_code From user WHERE user_nick = ?";
+		try {
+			pstmt = conn.prepareStatement(SQL);
+			pstmt.setString(1, nickname);
+			rs = pstmt.executeQuery();
+
+			if (rs.next()) {
+				String code = rs.getString(1);
+				return code;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return "error";
+	}
+	public String codeToNicknameSearch(String code) {
+		String SQL = "SELECT user_nick From user WHERE user_code = ?";
+		try {
+			pstmt = conn.prepareStatement(SQL);
+			pstmt.setString(1, code);
+			rs = pstmt.executeQuery();
+
+			if (rs.next()) {
+				String nickname = rs.getString(1);
+				return nickname;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return "error";
+	}
+	
+	public User getUser(String usercode) {
+		String SQL = "SELECT * FROM user WHERE user_code = ?";
+		try {
+			PreparedStatement pstmt = conn.prepareStatement(SQL);
+			pstmt.setString(1,usercode);
+			rs = pstmt.executeQuery();
+			while(rs.next()) {
+				User user = new User();
+				user.setUserNickname(rs.getString(4));
+				user.setUserAge(rs.getInt(5));
+				user.setUserGender(rs.getInt(6));
+				return user;
+			}
+			
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
+		return null;
 	}
 
 	public String makeCode() {

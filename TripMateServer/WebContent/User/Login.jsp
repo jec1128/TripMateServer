@@ -25,7 +25,7 @@
 
 	jObject1.put("msg", result);
 	jObject2.put("email", userDAO.emailSearch(id));
-	jObject3.put("nickname",userDAO.nicknameSearch(id));
+	jObject3.put("nickname",userDAO.idToNicknameSearch(id));
 	jArray.add(0, jObject1);
 	jArray.add(0,jObject2);
 	jArray.add(0,jObject3);
