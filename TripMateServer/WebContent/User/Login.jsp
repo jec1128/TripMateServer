@@ -22,17 +22,14 @@
 	JSONObject jObject1 = new JSONObject();
 	JSONObject jObject2 = new JSONObject();
 	JSONObject jObject3 = new JSONObject();
-	JSONObject jObject4 = new JSONObject();
 
 	jObject1.put("msg", result);
 	jObject2.put("email", userDAO.emailSearch(id));
 	jObject3.put("nickname",userDAO.idToNicknameSearch(id));
-	jObject4.put("uid",userDAO.uidSearch(id));
 	
 	jArray.add(0, jObject1);
 	jArray.add(0,jObject2);
 	jArray.add(0,jObject3);
-	jArray.add(0,jObject4);
 	
 	jsonMain.put("Login",jArray);
 	System.out.println(jsonMain);

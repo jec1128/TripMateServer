@@ -97,13 +97,13 @@ public class UserDAO {
 
 		return "db-error"; // 데이터베이스 오류
 	}
-	public String uidUpdate(String uid,String id) {
-		String SQL = "UPDATE user SET user_uid = ? WHERE user_id = ?";
+	public String uidUpdate(String uid,String nickname) {
+		String SQL = "UPDATE user SET user_uid = ? WHERE user_nick = ?";
 		try {
 			
 			PreparedStatement pstmt = conn.prepareStatement(SQL);
 			pstmt.setString(1,uid);
-			pstmt.setString(2,id);
+			pstmt.setString(2,nickname);
 			
 			int result = pstmt.executeUpdate();
 			if (result>=0) {
