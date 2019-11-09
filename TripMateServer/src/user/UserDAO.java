@@ -68,7 +68,7 @@ public class UserDAO {
 	}
 
 	public String register(User user) {
-		String SQL = "INSERT INTO user VALUES(?, ?, ?, ?, ?, ?, ?, ?)";
+		String SQL = "INSERT INTO user VALUES(?, ?, ?, ?, ?, ?, ?, ?, 0)";
 		try {
 			String code = makeCode();
 			if("error".equals(code)) {
@@ -97,7 +97,29 @@ public class UserDAO {
 
 		return "db-error"; // 데이터베이스 오류
 	}
-
+	public String uidUpdate(String uid,String id) {
+		String SQL = "UPDATE user SET user_uid = ? WHERE user_id = ?";
+		try {
+			
+			PreparedStatement pstmt = conn.prepareStatement(SQL);
+			pstmt.setString(1,uid);
+			pstmt.setString(2,id);
+			
+			int result = pstmt.executeUpdate();
+			if (result>=0) {
+				return "success";
+			}
+			else {
+				return "error";
+			}
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
+		
+		return "error"; //데이터베이스 오류
+	}
+	
+	
 	public String checkIdDuplication(String id) {
 		String SQL = "SELECT * From user";
 		ArrayList<User> list = new ArrayList<User>();
@@ -182,6 +204,23 @@ public class UserDAO {
 		return "error";
 	}
 	
+	public String uidSearch(String nickname) {
+		String SQL = "SELECT user_uid From user WHERE user_nick = ?";
+		try {
+			pstmt = conn.prepareStatement(SQL);
+			pstmt.setString(1, nickname);
+			rs = pstmt.executeQuery();
+
+			if (rs.next()) {
+				String uid = rs.getString(1);
+				return uid;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return "error";
+	}
+	
 	public String codeSearch(String nickname) {
 		String SQL = "SELECT user_code From user WHERE user_nick = ?";
 		try {
@@ -208,6 +247,22 @@ public class UserDAO {
 			if (rs.next()) {
 				String nickname = rs.getString(1);
 				return nickname;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return "error";
+	}
+	public String nicknameToUid(String nickname) {
+		String SQL = "SELECT user_uid From user WHERE user_nick = ?";
+		try {
+			pstmt = conn.prepareStatement(SQL);
+			pstmt.setString(1, nickname);
+			rs = pstmt.executeQuery();
+
+			if (rs.next()) {
+				String uid = rs.getString(1);
+				return uid;
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

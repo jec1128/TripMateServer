@@ -9,33 +9,20 @@
 
 <% 
 	request.setCharacterEncoding("UTF-8");
-	String id = request.getParameter("id");
-	String password = request.getParameter("password");
-	System.out.println("id : "+id+" password : "+password);
+	String nickname = request.getParameter("nickname");
+	String uid = request.getParameter("uid");	
+	System.out.println("nickname : "+nickname + "uid : " + uid);
 	UserDAO userDAO = new UserDAO();
-	String result = userDAO.login(id,password);
-	System.out.println("Login : "+result);
+	String result = userDAO.uidUpdate(uid,nickname);
 	
+	System.out.println("uidupate : " + result);
 	JSONObject jsonMain = new JSONObject();
 	JSONArray jArray = new JSONArray();
-	
 	JSONObject jObject1 = new JSONObject();
-	JSONObject jObject2 = new JSONObject();
-	JSONObject jObject3 = new JSONObject();
-	JSONObject jObject4 = new JSONObject();
 
 	jObject1.put("msg", result);
-	jObject2.put("email", userDAO.emailSearch(id));
-	jObject3.put("nickname",userDAO.idToNicknameSearch(id));
-	jObject4.put("uid",userDAO.uidSearch(id));
-	
 	jArray.add(0, jObject1);
-	jArray.add(0,jObject2);
-	jArray.add(0,jObject3);
-	jArray.add(0,jObject4);
-	
-	jsonMain.put("Login",jArray);
-	System.out.println(jsonMain);
+	jsonMain.put("uid-update",jArray);
 	out.print(jsonMain.toJSONString());
 	out.flush();
 %>
