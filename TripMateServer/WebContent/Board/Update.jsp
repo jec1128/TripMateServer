@@ -33,13 +33,12 @@
 	String startdatetime = dateformat.changeDateFormat(date1 + starttime1);
 	String enddatetime = dateformat.changeDateFormat(date1 + endtime1);
 	
-	String thema1 = request.getParameter("thema1");
-	String thema2 = request.getParameter("thema2");
-	String thema3 = request.getParameter("thema3"); 
+	String purpose = request.getParameter("purpose");
+	
 	
 	
 	BoardDAO boardDAO = new BoardDAO();
-	Board board = new Board(usercode,destination,content,gender,minage,maxage,startdatetime,enddatetime,thema1,thema2,thema3); 
+	Board board = new Board(usercode,destination,content,gender,minage,maxage,startdatetime,enddatetime,purpose); 
 
 	String result = boardDAO.update(boardCode,board);
 	System.out.println("update : " + result);

@@ -12,14 +12,12 @@ public class Board {
 	private int maxage;
 	private String matchingstartDatetime;
 	private String matchingendDatetime;
-	private String thema1;
-	private String thema2;
-	private String thema3;
+	private String purpose;
 	private String noticeDatetime;
 	
 	
 	public Board(String userCode, String destination, String content, int gender, int minage, int maxage,
-			String matchingstartDatetime, String matchingendDatetime, String thema1, String thema2, String thema3) {
+			String matchingstartDatetime, String matchingendDatetime, String purpose) {
 		this.userCode = userCode;
 		this.destination = destination;
 		this.content = content;
@@ -28,9 +26,8 @@ public class Board {
 		this.maxage = maxage;
 		this.matchingstartDatetime = matchingstartDatetime;
 		this.matchingendDatetime = matchingendDatetime;
-		this.thema1 = thema1;
-		this.thema2 = thema2;
-		this.thema3 = thema3;
+		this.purpose = purpose;
+		
 	}
 	public Board() {
 		// TODO Auto-generated constructor stub
@@ -90,24 +87,13 @@ public class Board {
 	public void setMatchingendDatetime(String matchingendDatetime) {
 		this.matchingendDatetime = matchingendDatetime;
 	}
-	public String getThema1() {
-		return thema1;
+	public String getPurpose() {
+		return purpose;
 	}
-	public void setThema1(String thema1) {
-		this.thema1 = thema1;
+	public void setPurpose(String purpose) {
+		this.purpose = purpose;
 	}
-	public String getThema2() {
-		return thema2;
-	}
-	public void setThema2(String thema2) {
-		this.thema2 = thema2;
-	}
-	public String getThema3() {
-		return thema3;
-	}
-	public void setThema3(String thema3) {
-		this.thema3 = thema3;
-	}
+	
 	public String getNoticeDatetime() {
 		return noticeDatetime;
 	}

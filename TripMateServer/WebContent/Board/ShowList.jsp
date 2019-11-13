@@ -35,9 +35,8 @@
 		sObject.put("minage",list.get(i).getMinage());
 		sObject.put("maxage",list.get(i).getMaxage());
 		sObject.put("date",list.get(i).getMatchingstartDatetime().substring(0,10)); //년월일만나오도록 자르기
-		sObject.put("thema1",list.get(i).getThema1());
-		sObject.put("thema2",list.get(i).getThema2());
-		sObject.put("thema3",list.get(i).getThema3());
+		sObject.put("purpose",list.get(i).getPurpose());
+		
 		jArray.add(sObject);
 	}
 	jsonMain.put("show",jArray);

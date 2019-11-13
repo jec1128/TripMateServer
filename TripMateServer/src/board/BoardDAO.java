@@ -71,7 +71,7 @@ public class BoardDAO {
 	}
 
 	public String write(Board board) {
-		String SQL = "INSERT INTO matchingboard VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+		String SQL = "INSERT INTO matchingboard VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 		try {
 			String code = makeCode();
 			if ("error".equals(code)) {
@@ -87,11 +87,9 @@ public class BoardDAO {
 			pstmt.setInt(7, board.getMaxage());
 			pstmt.setString(8, board.getMatchingstartDatetime());
 			pstmt.setString(9, board.getMatchingendDatetime());
-			pstmt.setString(10, board.getThema1());
-			pstmt.setString(11, board.getThema2());
-			pstmt.setString(12, board.getThema3());
-			pstmt.setString(13, getDate());
-			pstmt.setInt(14, 0);
+			pstmt.setString(10, board.getPurpose());
+			pstmt.setString(11, getDate());
+			pstmt.setInt(12, 0);
 
 			int result = pstmt.executeUpdate();
 			if (result >= 0)
@@ -105,7 +103,7 @@ public class BoardDAO {
 	}
 
 	public ArrayList<Board> getList(int pageNumber) {
-		String SQL = "SELECT * FROM matchingboard WHERE delete_state = 0 ORDER BY notice_datetime DESC limit 10";
+		String SQL = "SELECT * FROM matchingboard WHERE delete_state = 0 ORDER BY notice_datetime DESC limit 20";
 		ArrayList<Board> list = new ArrayList<Board>();
 		try {
 			PreparedStatement pstmt = conn.prepareStatement(SQL);
@@ -122,10 +120,8 @@ public class BoardDAO {
 				board.setMaxage(rs.getInt(7));
 				board.setMatchingstartDatetime(rs.getString(8));
 				board.setMatchingendDatetime(rs.getString(9));
-				board.setThema1(rs.getString(10));
-				board.setThema2(rs.getString(11));
-				board.setThema3(rs.getString(12));
-				board.setNoticeDatetime(rs.getString(13));
+				board.setPurpose(rs.getString(10));
+				board.setNoticeDatetime(rs.getString(11));
 				list.add(board);
 			}
 
@@ -153,10 +149,8 @@ public class BoardDAO {
 				board.setMaxage(rs.getInt(7));
 				board.setMatchingstartDatetime(rs.getString(8));
 				board.setMatchingendDatetime(rs.getString(9));
-				board.setThema1(rs.getString(10));
-				board.setThema2(rs.getString(11));
-				board.setThema3(rs.getString(12));
-				board.setNoticeDatetime(rs.getString(13));
+				board.setPurpose(rs.getString(10));
+				board.setNoticeDatetime(rs.getString(11));
 				return board;
 			}
 			
@@ -167,7 +161,7 @@ public class BoardDAO {
 	}
 	
 	public String update(String boardCode, Board board) {
-		String SQL = "UPDATE matchingboard SET destination = ?, content = ?, party_gender = ?, party_min_age = ?, party_max_age = ?, matching_start_datetime = ?, matching_end_datetime = ?, trip_thema1 = ?, trip_thema2 = ?, trip_thema3 = ?, notice_datetime = NOW() WHERE board_code = ?";
+		String SQL = "UPDATE matchingboard SET destination = ?, content = ?, party_gender = ?, party_min_age = ?, party_max_age = ?, matching_start_datetime = ?, matching_end_datetime = ?, trip_purpose = ?, notice_datetime = NOW() WHERE board_code = ?";
 		try {
 			
 			PreparedStatement pstmt = conn.prepareStatement(SQL);
@@ -178,10 +172,8 @@ public class BoardDAO {
 			pstmt.setInt(5,board.getMaxage());
 			pstmt.setString(6,board.getMatchingstartDatetime());
 			pstmt.setString(7,board.getMatchingendDatetime());
-			pstmt.setString(8,board.getThema1());
-			pstmt.setString(9,board.getThema2());
-			pstmt.setString(10,board.getThema3());
-			pstmt.setString(11,boardCode);
+			pstmt.setString(8,board.getPurpose());
+			pstmt.setString(9,boardCode);
 			
 			int result = pstmt.executeUpdate();
 			if (result>=0) {
@@ -211,6 +203,56 @@ public class BoardDAO {
 			e.printStackTrace();
 		}
 		return "error";
+	}
+	
+	public ArrayList<Board> getMatchingList(String destination, int gender, int minage, int maxage,int userage, String startdatetime, String purpose) {
+		String SQL = null;
+		if (gender == 0) {
+			SQL = "SELECT * FROM matchingboard WHERE delete_state = 0 AND party_gender = 0 AND trip_purpose = ? AND destination = ? AND party_min_age < ? AND party_max_age > ? AND ? BETWEEN matching_start_datetime AND matching_end_datetime ORDER BY notice_datetime DESC limit 20";
+		}
+		else if (gender == 1) {
+			SQL = "SELECT * FROM matchingboard WHERE delete_state = 0 AND party_gender = 1 AND trip_purpose = ? AND destination = ? AND party_min_age < ? AND party_max_age > ? AND ? BETWEEN matching_start_datetime AND matching_end_datetime ORDER BY notice_datetime DESC limit 20";
+		}
+		else {
+			SQL = "SELECT * FROM matchingboard WHERE delete_state = 0 AND trip_purpose = ? AND destination = ? AND party_min_age < ? AND party_max_age > ? AND ? BETWEEN matching_start_datetime AND matching_end_datetime ORDER BY notice_datetime DESC limit 20";
+		}
+		ArrayList<Board> list = new ArrayList<Board>();
+		try {
+			
+			PreparedStatement pstmt = conn.prepareStatement(SQL);
+			pstmt.setString(1, purpose);
+			pstmt.setString(2, destination);
+			pstmt.setInt(3, userage);
+			pstmt.setInt(4, userage);
+			pstmt.setString(5, startdatetime);
+			
+			rs = pstmt.executeQuery();
+			UserDAO userDAO = new UserDAO();
+			while (rs.next()) {
+				int age1 = userDAO.usercodeToAge(rs.getString(2));
+				if(age1>=minage && age1<=maxage) {
+					Board board = new Board();
+					board.setBoardCode(rs.getString(1));
+					board.setUserCode(rs.getString(2));
+					board.setDestination(rs.getString(3));
+					board.setContent(rs.getString(4));
+					board.setGender(rs.getInt(5));
+					board.setMinage(rs.getInt(6));
+					board.setMaxage(rs.getInt(7));
+					board.setMatchingstartDatetime(rs.getString(8));
+					board.setMatchingendDatetime(rs.getString(9));
+					board.setPurpose(rs.getString(10));
+					board.setNoticeDatetime(rs.getString(11));
+					list.add(board);
+				}
+			}
+			return list;
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+	return null;
 	}
 
 }

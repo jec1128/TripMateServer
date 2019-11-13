@@ -270,6 +270,24 @@ public class UserDAO {
 		return "error";
 	}
 	
+	public int usercodeToAge(String usercode) {
+		String SQL = "SELECT user_age From user WHERE user_code = ?";
+		try {
+			pstmt = conn.prepareStatement(SQL);
+			pstmt.setString(1, usercode);
+			rs = pstmt.executeQuery();
+
+			if (rs.next()) {
+				int age = rs.getInt(1);
+				return age;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return 0;
+	}
+	
+	
 	public User getUser(String usercode) {
 		String SQL = "SELECT * FROM user WHERE user_code = ?";
 		try {

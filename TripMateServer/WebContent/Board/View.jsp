@@ -49,9 +49,7 @@
 		String date = datetimeformat.changeDateFormat2(send);
 		sObject.put("matching-date",date);
 		sObject.put("writing-date",board.getNoticeDatetime().substring(0,19)); 
-		sObject.put("thema1",board.getThema1());
-		sObject.put("thema2",board.getThema2());
-		sObject.put("thema3",board.getThema3());
+		sObject.put("purpose",board.getPurpose());
 		sObject.put("writer",user.getUserNickname());
 		
 		String usergender = null;
