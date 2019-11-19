@@ -23,9 +23,9 @@
 	ResultSet rs;
 	String result1 = null;
 	try {
-		String URL = "jdbc:mysql://localhost:3306/triptest?serverTimezone=Asia/Seoul&autoReconnect=true&useSSL=false&allowPublicKeyRetrieval=true";
+		String URL = "jdbc:mysql://localhost:3306/tripmate?serverTimezone=Asia/Seoul&autoReconnect=true&useSSL=false&allowPublicKeyRetrieval=true";
 		String id = "root";
-		String password = "heart44";
+		String password = "root";
 		Class.forName("com.mysql.jdbc.Driver");
 		conn = DriverManager.getConnection(URL, id, password);
 		

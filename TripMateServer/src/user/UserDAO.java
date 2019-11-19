@@ -221,6 +221,23 @@ public class UserDAO {
 		return "error";
 	}
 	
+	public String uidToNickname(String uid) {
+		String SQL = "SELECT user_nick From user WHERE user_uid = ?";
+		try {
+			pstmt = conn.prepareStatement(SQL);
+			pstmt.setString(1, uid);
+			rs = pstmt.executeQuery();
+
+			if (rs.next()) {
+				String nickname = rs.getString(1);
+				return nickname;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return "error";
+	}
+	
 	public String codeSearch(String nickname) {
 		String SQL = "SELECT user_code From user WHERE user_nick = ?";
 		try {

@@ -18,7 +18,7 @@
 	String nickname = request.getParameter("nickname");
 	UserDAO userDAO = new UserDAO();
 	String usercode = userDAO.codeSearch(nickname);
-	int userAge = userDAO.usercodeToAge(usercode);
+	int userAge = userDAO.usercodeToAge(usercode); // 작성자 나이
 	String destination = request.getParameter("destination");
 	String gender1 = request.getParameter("gender");
 	int gender = Integer.parseInt(gender1);

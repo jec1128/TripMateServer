@@ -71,7 +71,7 @@ public class BoardDAO {
 	}
 
 	public String write(Board board) {
-		String SQL = "INSERT INTO matchingboard VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+		String SQL = "INSERT INTO matchingboard VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 		try {
 			String code = makeCode();
 			if ("error".equals(code)) {
@@ -90,7 +90,7 @@ public class BoardDAO {
 			pstmt.setString(10, board.getPurpose());
 			pstmt.setString(11, getDate());
 			pstmt.setInt(12, 0);
-
+			pstmt.setInt(13,getNext());
 			int result = pstmt.executeUpdate();
 			if (result >= 0)
 				return "success"; // insert문을 실행하면 무조건 0이상의 수가 반환됨
@@ -103,10 +103,11 @@ public class BoardDAO {
 	}
 
 	public ArrayList<Board> getList(int pageNumber) {
-		String SQL = "SELECT * FROM matchingboard WHERE delete_state = 0 ORDER BY notice_datetime DESC limit 20";
+		String SQL = "SELECT * FROM matchingboard WHERE board_number < ? AND delete_state = 0 ORDER BY notice_datetime DESC limit 5";
 		ArrayList<Board> list = new ArrayList<Board>();
 		try {
 			PreparedStatement pstmt = conn.prepareStatement(SQL);
+			pstmt.setInt(1, getNext() - (pageNumber - 1) *5);
 			rs = pstmt.executeQuery();
 			while (rs.next()) {
 				Board board = new Board();
@@ -208,13 +209,13 @@ public class BoardDAO {
 	public ArrayList<Board> getMatchingList(String destination, int gender, int minage, int maxage,int userage, String startdatetime, String purpose) {
 		String SQL = null;
 		if (gender == 0) {
-			SQL = "SELECT * FROM matchingboard WHERE delete_state = 0 AND party_gender = 0 AND trip_purpose = ? AND destination = ? AND party_min_age < ? AND party_max_age > ? AND ? BETWEEN matching_start_datetime AND matching_end_datetime ORDER BY notice_datetime DESC limit 20";
+			SQL = "SELECT * FROM matchingboard WHERE delete_state = 0 AND party_gender = 0 AND trip_purpose = ? AND destination = ? AND party_min_age <= ? AND party_max_age >= ? AND ? BETWEEN matching_start_datetime AND matching_end_datetime ORDER BY notice_datetime DESC limit 20";
 		}
 		else if (gender == 1) {
-			SQL = "SELECT * FROM matchingboard WHERE delete_state = 0 AND party_gender = 1 AND trip_purpose = ? AND destination = ? AND party_min_age < ? AND party_max_age > ? AND ? BETWEEN matching_start_datetime AND matching_end_datetime ORDER BY notice_datetime DESC limit 20";
+			SQL = "SELECT * FROM matchingboard WHERE delete_state = 0 AND party_gender = 1 AND trip_purpose = ? AND destination = ? AND party_min_age <= ? AND party_max_age >= ? AND ? BETWEEN matching_start_datetime AND matching_end_datetime ORDER BY notice_datetime DESC limit 20";
 		}
 		else {
-			SQL = "SELECT * FROM matchingboard WHERE delete_state = 0 AND trip_purpose = ? AND destination = ? AND party_min_age < ? AND party_max_age > ? AND ? BETWEEN matching_start_datetime AND matching_end_datetime ORDER BY notice_datetime DESC limit 20";
+			SQL = "SELECT * FROM matchingboard WHERE delete_state = 0 AND trip_purpose = ? AND destination = ? AND party_min_age <= ? AND party_max_age >= ? AND ? BETWEEN matching_start_datetime AND matching_end_datetime ORDER BY notice_datetime DESC limit 20";
 		}
 		ArrayList<Board> list = new ArrayList<Board>();
 		try {
