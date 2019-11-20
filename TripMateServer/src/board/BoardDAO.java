@@ -1,10 +1,12 @@
 package board;
 
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
 import board.Board;
@@ -103,11 +105,11 @@ public class BoardDAO {
 	}
 
 	public ArrayList<Board> getList(int pageNumber) {
-		String SQL = "SELECT * FROM matchingboard WHERE board_number < ? AND delete_state = 0 ORDER BY notice_datetime DESC limit 5";
+		String SQL = "SELECT * FROM matchingboard WHERE board_number < ? AND delete_state = 0 ORDER BY notice_datetime DESC limit 10";
 		ArrayList<Board> list = new ArrayList<Board>();
 		try {
 			PreparedStatement pstmt = conn.prepareStatement(SQL);
-			pstmt.setInt(1, getNext() - (pageNumber - 1) *5);
+			pstmt.setInt(1, getNext() - (pageNumber - 1) *10);
 			rs = pstmt.executeQuery();
 			while (rs.next()) {
 				Board board = new Board();
@@ -208,15 +210,10 @@ public class BoardDAO {
 	
 	public ArrayList<Board> getMatchingList(String destination, int gender, int minage, int maxage,int userage, String startdatetime, String purpose) {
 		String SQL = null;
-		if (gender == 0) {
-			SQL = "SELECT * FROM matchingboard WHERE delete_state = 0 AND party_gender = 0 AND trip_purpose = ? AND destination = ? AND party_min_age <= ? AND party_max_age >= ? AND ? BETWEEN matching_start_datetime AND matching_end_datetime ORDER BY notice_datetime DESC limit 20";
-		}
-		else if (gender == 1) {
-			SQL = "SELECT * FROM matchingboard WHERE delete_state = 0 AND party_gender = 1 AND trip_purpose = ? AND destination = ? AND party_min_age <= ? AND party_max_age >= ? AND ? BETWEEN matching_start_datetime AND matching_end_datetime ORDER BY notice_datetime DESC limit 20";
-		}
-		else {
-			SQL = "SELECT * FROM matchingboard WHERE delete_state = 0 AND trip_purpose = ? AND destination = ? AND party_min_age <= ? AND party_max_age >= ? AND ? BETWEEN matching_start_datetime AND matching_end_datetime ORDER BY notice_datetime DESC limit 20";
-		}
+		
+		SQL = "SELECT * FROM matchingboard WHERE delete_state = 0 AND trip_purpose = ? AND destination = ? AND party_min_age <= ? AND party_max_age >= ? AND matching_start_datetime < " + "'" + startdatetime + "'" + " AND matching_end_datetime > " + "'" +startdatetime + "'" +" ORDER BY notice_datetime DESC limit 20";
+		
+		
 		ArrayList<Board> list = new ArrayList<Board>();
 		try {
 			
@@ -225,13 +222,14 @@ public class BoardDAO {
 			pstmt.setString(2, destination);
 			pstmt.setInt(3, userage);
 			pstmt.setInt(4, userage);
-			pstmt.setString(5, startdatetime);
-			
 			rs = pstmt.executeQuery();
+			int count = 0;
 			UserDAO userDAO = new UserDAO();
 			while (rs.next()) {
+				count++;
 				int age1 = userDAO.usercodeToAge(rs.getString(2));
-				if(age1>=minage && age1<=maxage) {
+				int gender1 = userDAO.usercodeToGender(rs.getString(2));
+				if(age1>=minage && age1<=maxage && gender1==gender) {               //이 게시글의 작성자의 나이를 매칭을 원하는 나이와 성별을 비교해서 걸러냄
 					Board board = new Board();
 					board.setBoardCode(rs.getString(1));
 					board.setUserCode(rs.getString(2));
@@ -247,6 +245,7 @@ public class BoardDAO {
 					list.add(board);
 				}
 			}
+			System.out.println(count);
 			return list;
 
 		} catch (Exception e) {

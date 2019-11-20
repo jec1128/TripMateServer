@@ -304,6 +304,23 @@ public class UserDAO {
 		return 0;
 	}
 	
+	public int usercodeToGender(String usercode) {
+		String SQL = "SELECT user_gender From user WHERE user_code = ?";
+		try {
+			pstmt = conn.prepareStatement(SQL);
+			pstmt.setString(1, usercode);
+			rs = pstmt.executeQuery();
+
+			if (rs.next()) {
+				int gender = rs.getInt(1);
+				return gender;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return -1;
+	}
+	
 	
 	public User getUser(String usercode) {
 		String SQL = "SELECT * FROM user WHERE user_code = ?";

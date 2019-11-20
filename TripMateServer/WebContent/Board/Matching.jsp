@@ -18,10 +18,10 @@
 	String nickname = request.getParameter("nickname");
 	UserDAO userDAO = new UserDAO();
 	String usercode = userDAO.codeSearch(nickname);
-	int userAge = userDAO.usercodeToAge(usercode); // 작성자 나이
+	int userAge = userDAO.usercodeToAge(usercode); // 매칭을 원하는 작성자의 나이
 	String destination = request.getParameter("destination");
 	String gender1 = request.getParameter("gender");
-	int gender = Integer.parseInt(gender1);
+	int gender = Integer.parseInt(gender1); //상대방의 성별
 	String minage1 = request.getParameter("minage");
 	int minage = Integer.parseInt(minage1);
 	String maxage1 = request.getParameter("maxage");
@@ -29,10 +29,10 @@
 
 	String date1 = request.getParameter("date");
 	String starttime1 = request.getParameter("starttime");
-
+	System.out.println("starttime1 : " + starttime1);
 	format dateformat = new format();
 	String startdatetime = dateformat.changeDateFormat(date1 + starttime1);
-	
+	System.out.println("startdatetime : " + startdatetime);
 	String purpose = request.getParameter("purpose");
 	
 	
@@ -61,7 +61,7 @@
 	}
 	
 	jsonMain.put("matching", jArray);
-	System.out.println("matching list count : " + list.size());
+	System.out.println("matching list size : " + list.size());
 	System.out.println("matching list show");
 	out.print(jsonMain.toJSONString());
 	out.flush();
