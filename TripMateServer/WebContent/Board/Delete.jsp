@@ -17,7 +17,7 @@
 	
 
 	String result = boardDAO.delete(boardCode);
-	System.out.println("write : " + result);
+	System.out.println("delete : " + result);
 
 	JSONObject jsonMain = new JSONObject();
 	JSONArray jArray = new JSONArray();
