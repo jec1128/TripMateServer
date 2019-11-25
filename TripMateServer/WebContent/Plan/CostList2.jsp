@@ -5,38 +5,39 @@
 <%@ page import = "org.json.simple.JSONObject" %>
 <%@ page import = "org.json.simple.parser.JSONParser"%>
 <%@ page import = "org.json.simple.parser.ParseException" %>
-<%@ page import = "plan.planList" %>
+<%@ page import = "plan.costList" %>
 <%@ page import = "plan.planListDAO" %>
 <%@ page import = "user.UserDAO" %>
 <%@ page import = "java.util.*" %>
 
 <%
 	request.setCharacterEncoding("UTF-8");
-	String nickname = request.getParameter("nickname");
-	UserDAO userDAO = new UserDAO();
-	String usercode = userDAO.codeSearch(nickname);
+	String plancode = request.getParameter("plancode");
+	System.out.println(plancode);
 	
 	planListDAO listDAO = new planListDAO();
 	
-	ArrayList<planList> list= new ArrayList<planList>();
-	list = listDAO.ListView(usercode);
+	ArrayList<costList> list2= new ArrayList<costList>();
+	list2 = listDAO.CostList2(plancode);
 	
 	JSONObject jsonMain = new JSONObject();
 	JSONArray jArray = new JSONArray();
 	
-	for(int i = 0 ; i < list.size();i++){
+	for(int i = 0 ; i < list2.size();i++){
 		JSONObject sObject = new JSONObject();
-		sObject.put("plancode",list.get(i).getPlanCode());
-		sObject.put("place",list.get(i).getPlanPlace());
-		sObject.put("title",list.get(i).getPlanTitle());
-		sObject.put("start",list.get(i).getStartDate());
-		sObject.put("end",list.get(i).getEndDate());
-				
+		sObject.put("costcode",list2.get(i).getCostCode());
+		sObject.put("plancode",list2.get(i).getPlanCode());
+		sObject.put("title",list2.get(i).getCostTitle());
+		sObject.put("category",list2.get(i).getCostCategory());
+		sObject.put("type",list2.get(i).getCostType());
+		sObject.put("date",list2.get(i).getCostDate());
+		sObject.put("price",list2.get(i).getCostPrice());
+
 		jArray.add(sObject);
 	}
-	jsonMain.put("addlist",jArray);
+	jsonMain.put("costlist2",jArray);
 	
-	System.out.println("plan list show");
+	System.out.println("cost list show");
 	out.print(jsonMain.toJSONString());
 	out.flush(); 
 

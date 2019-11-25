@@ -12,16 +12,18 @@
 <%
 	request.setCharacterEncoding("UTF-8");
 	
-	String nickname = request.getParameter("nickname");
-	UserDAO userDAO = new UserDAO();
-	String usercode = userDAO.codeSearch(nickname);
-	String place = request.getParameter("place");
+	String plancode = request.getParameter("plancode");
 	String title = request.getParameter("title");
-	String start = request.getParameter("start");
-	String end = request.getParameter("end");
+	String category = request.getParameter("category");
+	int category2 = Integer.parseInt(category);
+	String type = request.getParameter("type");
+	int type2 = Integer.parseInt(type);
+	String date = request.getParameter("date");
+	String price = request.getParameter("price");
+	int price2 = Integer.parseInt(price);
 	
 	planListDAO listDAO = new planListDAO();
-	String code = listDAO.createCode();
+	String code = listDAO.createCode2();
 	
 	Connection conn;
 	PreparedStatement pstmt;
@@ -33,17 +35,17 @@
 		String password = "root";
 		Class.forName("com.mysql.jdbc.Driver");
 		conn = DriverManager.getConnection(URL, id, password);
-		
-		String SQL = "INSERT INTO tripplan VALUES(?, ?, ?, ?, ?, ?, ?)";
+		String SQL = "INSERT INTO tripcost VALUES(?, ?, ?, ?, ?, ?, ?, ?)";
 		
 		pstmt = conn.prepareStatement(SQL);
 		pstmt.setString(1, code);
-		pstmt.setString(2, usercode);
-		pstmt.setString(3, place);
-		pstmt.setString(4, title);
-		pstmt.setString(5, start);
-		pstmt.setString(6, end);
-		pstmt.setInt(7, 0);
+		pstmt.setString(2, plancode);
+		pstmt.setString(3, title);
+		pstmt.setInt(4, category2);
+		pstmt.setInt(5, type2);
+		pstmt.setString(6, date);
+		pstmt.setInt(7, price2);
+		pstmt.setInt(8, 0);
 		int result = pstmt.executeUpdate();
 		if (result >= 0)
 			result1 = "success";
@@ -54,7 +56,7 @@
 		e.printStackTrace();
 	}
 		
-	System.out.println("add : " + result1);
+	System.out.println("costadd : " + result1);
 
 	JSONObject jsonMain = new JSONObject();
 	JSONArray jArray = new JSONArray();
@@ -62,7 +64,7 @@
 
 	jObject.put("msg", result1);
 	jArray.add(0, jObject);
-	jsonMain.put("add", jArray);
+	jsonMain.put("costadd", jArray);
 	out.print(jsonMain.toJSONString());
 	out.flush(); 
 

@@ -12,16 +12,11 @@
 <%
 	request.setCharacterEncoding("UTF-8");
 	
-	String nickname = request.getParameter("nickname");
-	UserDAO userDAO = new UserDAO();
-	String usercode = userDAO.codeSearch(nickname);
+	String plancode = request.getParameter("plancode");
 	String place = request.getParameter("place");
 	String title = request.getParameter("title");
 	String start = request.getParameter("start");
 	String end = request.getParameter("end");
-	
-	planListDAO listDAO = new planListDAO();
-	String code = listDAO.createCode();
 	
 	Connection conn;
 	PreparedStatement pstmt;
@@ -34,16 +29,14 @@
 		Class.forName("com.mysql.jdbc.Driver");
 		conn = DriverManager.getConnection(URL, id, password);
 		
-		String SQL = "INSERT INTO tripplan VALUES(?, ?, ?, ?, ?, ?, ?)";
+		String SQL = "UPDATE tripplan SET plan_place = ?, plan_title = ?, trip_start_date = ?, trip_end_date = ? WHERE plan_code = ?";
 		
 		pstmt = conn.prepareStatement(SQL);
-		pstmt.setString(1, code);
-		pstmt.setString(2, usercode);
-		pstmt.setString(3, place);
-		pstmt.setString(4, title);
-		pstmt.setString(5, start);
-		pstmt.setString(6, end);
-		pstmt.setInt(7, 0);
+		pstmt.setString(1, place);
+		pstmt.setString(2, title);
+		pstmt.setString(3, start);
+		pstmt.setString(4, end);
+		pstmt.setString(5, plancode);
 		int result = pstmt.executeUpdate();
 		if (result >= 0)
 			result1 = "success";
@@ -54,7 +47,7 @@
 		e.printStackTrace();
 	}
 		
-	System.out.println("add : " + result1);
+	System.out.println("update : " + result1);
 
 	JSONObject jsonMain = new JSONObject();
 	JSONArray jArray = new JSONArray();
@@ -62,7 +55,7 @@
 
 	jObject.put("msg", result1);
 	jArray.add(0, jObject);
-	jsonMain.put("add", jArray);
+	jsonMain.put("update", jArray);
 	out.print(jsonMain.toJSONString());
 	out.flush(); 
 

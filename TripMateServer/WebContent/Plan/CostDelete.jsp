@@ -5,24 +5,15 @@
 <%@ page import = "org.json.simple.JSONObject" %>
 <%@ page import = "org.json.simple.parser.JSONParser"%>
 <%@ page import = "org.json.simple.parser.ParseException" %>
-<%@ page import = "plan.planList" %>
+<%@ page import = "plan.costList" %>
 <%@ page import = "plan.planListDAO" %>
 <%@ page import = "user.UserDAO" %>
 
 <%
 	request.setCharacterEncoding("UTF-8");
 	
-	String nickname = request.getParameter("nickname");
-	UserDAO userDAO = new UserDAO();
-	String usercode = userDAO.codeSearch(nickname);
-	String place = request.getParameter("place");
-	String title = request.getParameter("title");
-	String start = request.getParameter("start");
-	String end = request.getParameter("end");
-	
-	planListDAO listDAO = new planListDAO();
-	String code = listDAO.createCode();
-	
+	String costcode = request.getParameter("costcode");
+
 	Connection conn;
 	PreparedStatement pstmt;
 	ResultSet rs;
@@ -34,16 +25,10 @@
 		Class.forName("com.mysql.jdbc.Driver");
 		conn = DriverManager.getConnection(URL, id, password);
 		
-		String SQL = "INSERT INTO tripplan VALUES(?, ?, ?, ?, ?, ?, ?)";
+		String SQL = "UPDATE tripcost SET delete_state = 1 WHERE trip_cost_code = ?";
 		
 		pstmt = conn.prepareStatement(SQL);
-		pstmt.setString(1, code);
-		pstmt.setString(2, usercode);
-		pstmt.setString(3, place);
-		pstmt.setString(4, title);
-		pstmt.setString(5, start);
-		pstmt.setString(6, end);
-		pstmt.setInt(7, 0);
+		pstmt.setString(1, costcode);
 		int result = pstmt.executeUpdate();
 		if (result >= 0)
 			result1 = "success";
@@ -54,7 +39,7 @@
 		e.printStackTrace();
 	}
 		
-	System.out.println("add : " + result1);
+	System.out.println("costdelete : " + result1);
 
 	JSONObject jsonMain = new JSONObject();
 	JSONArray jArray = new JSONArray();
@@ -62,7 +47,7 @@
 
 	jObject.put("msg", result1);
 	jArray.add(0, jObject);
-	jsonMain.put("add", jArray);
+	jsonMain.put("costdelete", jArray);
 	out.print(jsonMain.toJSONString());
 	out.flush(); 
 

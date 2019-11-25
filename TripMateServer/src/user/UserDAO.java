@@ -47,7 +47,7 @@ public class UserDAO {
 	}
 
 	public String login(String userID, String userPassword) {
-		String SQL = "SELECT user_pw From user WHERE user_id = ?";
+		String SQL = "SELECT user_pw From user WHERE user_id = ? AND delete_state = 0";
 		try {
 			pstmt = conn.prepareStatement(SQL);
 			pstmt.setString(1, userID);
@@ -60,6 +60,26 @@ public class UserDAO {
 					return "password-wrong"; // 로그인 실패
 			}
 			return "no-id"; // id가 없음
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return "error"; // DB오류
+	}
+	
+	public String checkPassword(String userNickname, String userPassword) {
+		String SQL = "SELECT user_pw From user WHERE user_nick = ?";
+		try {
+			pstmt = conn.prepareStatement(SQL);
+			pstmt.setString(1, userNickname);
+			rs = pstmt.executeQuery();
+
+			if (rs.next()) {
+				if (rs.getString(1).equals(userPassword)) {
+					return "success"; // 비밀번호 맞음
+				} else
+					return "password-wrong"; // 비밀번호 틀림
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -97,6 +117,45 @@ public class UserDAO {
 
 		return "db-error"; // 데이터베이스 오류
 	}
+	
+	public String update(String currentNickname,String nextNickname, String password) {
+		String SQL = "UPDATE user SET user_nick = ?, user_pw = ? WHERE user_nick = ?";
+		try {
+
+			PreparedStatement pstmt = conn.prepareStatement(SQL);
+			pstmt.setString(1,nextNickname);
+			pstmt.setString(2, password);
+			pstmt.setString(3, currentNickname);
+
+			int result = pstmt.executeUpdate();
+			if (result >= 0) {
+				return "success";
+			} else {
+				return "error";
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return "error"; // 데이터베이스 오류
+	}
+	
+	public String delete(String nickname) {
+		String SQL = "UPDATE user SET delete_state = 1 WHERE user_nick = ?";
+		try {
+			PreparedStatement pstmt = conn.prepareStatement(SQL);
+			pstmt.setString(1, nickname);
+			int result = pstmt.executeUpdate();
+			if (result >= 0)
+				return "success";
+			else
+				return "error";
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return "error";
+	}
+	
 	public String uidUpdate(String uid,String nickname) {
 		String SQL = "UPDATE user SET user_uid = ? WHERE user_nick = ?";
 		try {
@@ -287,6 +346,23 @@ public class UserDAO {
 		return "error";
 	}
 	
+	public String nicknameToEmail(String nickname) {
+		String SQL = "SELECT user_email From user WHERE user_nick = ?";
+		try {
+			pstmt = conn.prepareStatement(SQL);
+			pstmt.setString(1, nickname);
+			rs = pstmt.executeQuery();
+
+			if (rs.next()) {
+				String email = rs.getString(1);
+				return email;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return "error";
+	}
+	
 	public int usercodeToAge(String usercode) {
 		String SQL = "SELECT user_age From user WHERE user_code = ?";
 		try {
@@ -350,5 +426,6 @@ public class UserDAO {
 		String code = idx + num;
 		return code;
 	}
+	
 
 }
